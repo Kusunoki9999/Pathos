@@ -2,7 +2,7 @@ from PIL import Image
 from PIL.ExifTags import TAGS,GPSTAGS
 import pandas as pd
 
-path = "test_image.JPG"
+path = "decoded_image\decoded.jpg"
 
 def load_exif(path):
     ifd_dict = {}
