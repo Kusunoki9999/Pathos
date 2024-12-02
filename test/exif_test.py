@@ -16,4 +16,4 @@ ifd_dict = load_exif(path)
 exif_sr = pd.Series(ifd_dict["Exif"]).rename(TAGS)
 gps_sr = pd.Series(ifd_dict["GPSInfo"]).rename(GPSTAGS)
 
-print(gps_sr)
+print(ifd_dict["GPSInfo"])
