@@ -1,28 +1,43 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pathos_index</title>
+<!doctype html>
 
-    <script src="http://maps.google.com/maps/api/js?key=<key>&language=ja"></script>
-</head>
-
-<body>
-    <div id="map"></div> 
-    
+<html>
+  <head>
+    <title>Pathos index</title>
     <script>
-        var latitude = [43.0598309,43.026854]
-        var longitude = [141.347055,141.3742278];
-        var MyLatLng = new google.maps.LatLng(43.0598309, 141.347055);
-        var Options = {
-            zoom: 13.2,
-            center: MyLatLng,
-            mapTypeId: 'roadmap'
-        };
-        var map = new google.maps.Map(document.getElementById('map'), Options);
-        
 
+      async function initMap() {
+        const contentString = `
+          <div>
+            <h1>Sapporo</h1>
+            <div>
+              <p>
+                sapporo center park
+              </p>
+              <img src="https://www.visit-hokkaido.jp/lsc/upfile/spot/0001/0004/10004_1_l.jpg">
+            </div>
+          </div>`;
+        const infoWindow = new google.maps.InfoWindow({
+          content: contentString,
+          ariaLabel: "Uluru",
+        });
+
+        const marker = document.querySelector('gmp-advanced-marker');
+        marker.addEventListener('gmp-click', () => {
+          infoWindow.open({anchor: marker});
+        });
+      }
+
+      window.initMap = initMap;
     </script>
-</body>
+    <link rel="stylesheet" href="syyle.css">
+  </head>
+  <body>
+    <gmp-map center="43.0598309, 141.347055" zoom="4" map-id="DEMO_MAP_ID">
+      <gmp-advanced-marker position="43.0598309, 141.347055" title="sapporo" gmp-clickable></gmp-advanced-marker>
+    </gmp-map>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=<key>&callback=initMap&libraries=marker&v=beta&solution_channel=GMP_CCS_infowindows_v2"
+      defer
+    ></script>
+  </body>
 </html>
