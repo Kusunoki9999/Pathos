@@ -10,8 +10,6 @@ app = FastAPI()
 
 GOOGLE_MAP_API_KEY = os.getenv("GOOGLE_MAP_API_KEY")
 
-app.mount("/", StaticFiles(directory="path/to/your/html/directory", html=True), name="static")
-
 @app.get("/")
 async def root():
     return {"message":"Hello,world"}
@@ -19,6 +17,8 @@ async def root():
 @app.get("/api-key")
 async def get_api_key():
     return {"api_key":GOOGLE_MAP_API_KEY}
+
+app.mount("/", StaticFiles(directory="templates", html=True), name="index")
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, log_level="debug")
