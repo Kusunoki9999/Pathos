@@ -1,17 +1,15 @@
 <!doctype html>
-
 <html>
   <head>
     <title>Pathos index</title>
     <script>
-
       async function initMap() {
         const contentString = `
           <div>
             <h1>Sapporo</h1>
             <div>
               <p>
-                sapporo center park
+                Sapporo center park
               </p>
               <img src="https://www.visit-hokkaido.jp/lsc/upfile/spot/0001/0004/10004_1_l.jpg" width="300" height="200">
             </div>
@@ -23,11 +21,28 @@
 
         const marker = document.querySelector('gmp-advanced-marker');
         marker.addEventListener('gmp-click', () => {
-          infoWindow.open({anchor: marker});
+          infoWindow.open({ anchor: marker });
         });
       }
 
-      window.initMap = initMap;
+      async function loadGoogleMapsAPI() {
+        try {
+          const response = await fetch('/api-key');
+          const data = await response.json();
+          console.log(data)
+          const api_key = data.api_key;
+
+          const script = document.createElement('script');
+          script.src = `https://maps.googleapis.com/maps/api/js?key=${api_key}&callback=initMap&libraries=marker&v=beta&solution_channel=GMP_CCS_infowindows_v2`;
+          script.defer = true;
+          document.head.appendChild(script);
+        } catch (error) {
+          console.error('APIキー取得ならず', error);
+        }
+      }
+
+      // ページ読み込み時にGoogle Maps APIをロード
+      window.onload = loadGoogleMapsAPI;
     </script>
     <link rel="stylesheet" href="style.css">
   </head>
@@ -35,9 +50,5 @@
     <gmp-map center="43.0598309, 141.347055" zoom="4" map-id="DEMO_MAP_ID">
       <gmp-advanced-marker position="43.0598309, 141.347055" title="sapporo" gmp-clickable></gmp-advanced-marker>
     </gmp-map>
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=<key>&callback=initMap&libraries=marker&v=beta&solution_channel=GMP_CCS_infowindows_v2"
-      defer
-    ></script>
   </body>
 </html>
