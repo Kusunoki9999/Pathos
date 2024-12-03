@@ -40,33 +40,32 @@
           console.error('APIキー取得ならず', error);
         }
       }
+
       // 読み込み時にAPIロード
       window.onload = loadGoogleMapsAPI;
     </script>
     <link rel="stylesheet" href="style.css">
   </head>
-
   <body>
+
     <div id="sidebar">
       <h2>投稿フォーム</h2>
       <form id="info-form">
-        <label for="title">タイトル (任意)</label>
-        <input type="text" id="title" name="title" placeholder="タイトルを入力してください">
+        <label for="title">タイトル (任意)</label><br>
+        <input type="text" id="title" name="title" placeholder="タイトルを入力してください"><br>
 
-        <label for="description">キャプション (任意)</label>
-        <textarea id="description" name="description" rows="4" placeholder="簡単な説明を入力してください"></textarea>
+        <label for="description">キャプション (任意)</label><br>
+        <textarea id="description" name="description" rows="4" placeholder="簡単な説明を入力してください"></textarea><br>
 
-        <label for="image">画像ファイル (必須)</label>
-        <input type="file" id="image" name="image" accept="image/*" required>
+        <label for="image">画像ファイル (必須)</label><br>
+        <input type="file" id="image" name="image" accept="image/*" required><br>
 
         <button type="submit">送信</button>
       </form>
     </div>
-
-    <div id="map-container">
-      <gmp-map center="43.0598309, 141.347055" zoom="4" map-id="DEMO_MAP_ID">
-        <gmp-advanced-marker position="43.0598309, 141.347055" title="sapporo" gmp-clickable></gmp-advanced-marker>
-      </gmp-map>
-    </div>
+    
+    <gmp-map center="43.0598309, 141.347055" zoom="4" map-id="DEMO_MAP_ID" id="map-container">
+      <gmp-advanced-marker position="43.0598309, 141.347055" title="sapporo" gmp-clickable></gmp-advanced-marker>
+    </gmp-map>
   </body>
 </html>
