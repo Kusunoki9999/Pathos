@@ -13,12 +13,12 @@
               <p>
                 sapporo center park
               </p>
-              <img src="https://www.visit-hokkaido.jp/lsc/upfile/spot/0001/0004/10004_1_l.jpg">
+              <img src="https://www.visit-hokkaido.jp/lsc/upfile/spot/0001/0004/10004_1_l.jpg" width="300" height="200">
             </div>
           </div>`;
         const infoWindow = new google.maps.InfoWindow({
           content: contentString,
-          ariaLabel: "Uluru",
+          ariaLabel: "sapporo",
         });
 
         const marker = document.querySelector('gmp-advanced-marker');
@@ -29,7 +29,7 @@
 
       window.initMap = initMap;
     </script>
-    <link rel="stylesheet" href="syyle.css">
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <gmp-map center="43.0598309, 141.347055" zoom="4" map-id="DEMO_MAP_ID">
