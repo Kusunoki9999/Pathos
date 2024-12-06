@@ -19,8 +19,13 @@ async def get_api_key():
     return {"api_key":GOOGLE_MAP_API_KEY}
 
 @app.post("/form_data")
-async def get_form_data(title: str = Form(), caption: str = Form(), image: UploadFile = Form()):
-    return {"title":title, "caption":caption, "image":image}
+async def get_form_data(title: str = Form(None), caption: str = Form(None), image: UploadFile = File(...)): #...は必須フィールド
+    return {
+        "title": title,
+        "caption": caption,
+        "filename": image.filename,
+        "content_type": image.content_type,
+        }
 
 app.mount("/", StaticFiles(directory="templates", html=True), name="index")
 
