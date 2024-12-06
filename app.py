@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Request, Form, UploadFile, File
 from dotenv import load_dotenv
+from pathlib import Path
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
 import uvicorn
 import os
 
@@ -10,9 +12,10 @@ app = FastAPI()
 
 GOOGLE_MAP_API_KEY = os.getenv("GOOGLE_MAP_API_KEY")
 
-@app.get("/")
+@app.get("/",response_class = HTMLResponse)
 async def root():
-    return {"message":"Hello,world"}
+    index_path = Path("templates/index.html")
+    return index_path.read_text(encoding = "utf-8")
 
 @app.get("/api-key")
 async def get_api_key():
@@ -27,7 +30,7 @@ async def get_form_data(title: str = Form(None), caption: str = Form(None), imag
         "content_type": image.content_type,
         }
 
-app.mount("/", StaticFiles(directory="templates", html=True), name="index")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 if __name__ == "__main__":
     uvicorn.run(app, port=8080, log_level="debug")
