@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form, UploadFile, File
 from dotenv import load_dotenv
 from fastapi.staticfiles import StaticFiles
 import uvicorn
@@ -17,6 +17,10 @@ async def root():
 @app.get("/api-key")
 async def get_api_key():
     return {"api_key":GOOGLE_MAP_API_KEY}
+
+@app.post("/form_data")
+async def get_form_data(title: str = Form(), caption: str = Form(), image: UploadFile = Form()):
+    return {"title":title, "caption":caption, "image":image}
 
 app.mount("/", StaticFiles(directory="templates", html=True), name="index")
 
