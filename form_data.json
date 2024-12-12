@@ -10,5 +10,11 @@
         "caption": "augsuywdgwuyd",
         "filename": "test_image.jpg",
         "content_type": "image/jpeg"
+    },
+    {
+        "title": "裏庭",
+        "caption": "テスト",
+        "filename": "test_image.jpg",
+        "content_type": "image/jpeg"
     }
 ]

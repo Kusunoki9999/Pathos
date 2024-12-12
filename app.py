@@ -3,9 +3,12 @@ from dotenv import load_dotenv
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
+from PIL import Image
+from PIL.ExifTags import TAGS
 import uvicorn
 import os
 import json
+import io
 
 load_dotenv()
 
@@ -40,12 +43,28 @@ async def get_api_key():
     return {"api_key":GOOGLE_MAP_API_KEY}
 
 @app.post("/form_data")
-async def get_form_data(title: str = Form(None), caption: str = Form(None), image: UploadFile = File(...)): #...は必須フィールド
+async def get_form_data(
+    title: str = Form(None),
+    caption: str = Form(None),
+    image: UploadFile = File(...) #...は必須フィールド
+):
+    
+    image_data = await image.read()
+    with Image.open(io.BytesIO(image_data)) as img:
+        exif_data = img._getexif()
+        exif_info = {}
+        
+        if exif_data:
+            for tag, value in exif_data.items():
+                tag_name = TAGS.get(tag, tag)  # タグ番号を名前に変換
+                exif_info[tag_name] = value
+
     data = {
         "title": title,
         "caption": caption,
         "filename": image.filename,
         "content_type": image.content_type,
+        "exif": exif_data,  # EXIFデータを返す
     }
     save_to_json(data)
 
