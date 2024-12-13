@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
+from PIL.TiffImagePlugin import IFDRational
 import uvicorn
 import os
 import json
@@ -16,6 +17,13 @@ app = FastAPI()
 
 GOOGLE_MAP_API_KEY = os.getenv("GOOGLE_MAP_API_KEY")
 JSON_FILE_PATH = "form_data.json"
+
+def convert_exif_value(value):
+    if isinstance(value, IFDRational):
+        return float(value)
+    elif isinstance(value, (list, tuple)):
+        return [convert_exif_value(v) for v in value]
+    return value
 
 def save_to_json(data):
     try:
@@ -57,14 +65,14 @@ async def get_form_data(
         if exif_data:
             for tag, value in exif_data.items():
                 tag_name = TAGS.get(tag, tag)  # タグ番号を名前に変換
-                if isinstance(value, bytes):
-                    value = value.decode(errors="ignore")
-                elif tag_name == "GPSInfo": # GPSInfoは辞書型でありbytes型ではない
+                if tag_name == "GPSInfo": # GPSInfoは辞書型でありbytes型ではない
                     gps_data = {}
                     for gps_tag, gps_value in value.items(): # GPSはタグ名付きの辞書に変換
                         gps_tag_name = GPSTAGS.get(gps_tag, gps_tag)
                         gps_data[gps_tag_name] = gps_value
                     value = gps_data
+                else:
+                    value = convert_exif_value(value)
                 exif_info[tag_name] = value
                       
     data = {
