@@ -57,16 +57,17 @@ async def get_form_data(
         if exif_data:
             for tag, value in exif_data.items():
                 tag_name = TAGS.get(tag, tag)  # タグ番号を名前に変換
-                exif_info[tag_name] = value
-
+                if isinstance(value, bytes):
+                    value = value.decode(errors="ignore")
+        
     data = {
         "title": title,
         "caption": caption,
         "filename": image.filename,
         "content_type": image.content_type,
-        "exif": exif_data,  # EXIFデータを返す
+        "exif": exif_info,  # EXIFデータを返す
     }
-    save_to_json(data)
+    return data
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
