@@ -4,7 +4,7 @@ from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from PIL import Image
-from PIL.ExifTags import TAGS
+from PIL.ExifTags import TAGS, GPSTAGS
 import uvicorn
 import os
 import json
@@ -59,15 +59,22 @@ async def get_form_data(
                 tag_name = TAGS.get(tag, tag)  # タグ番号を名前に変換
                 if isinstance(value, bytes):
                     value = value.decode(errors="ignore")
-        
+                elif tag_name == "GPSInfo": # GPSInfoは辞書型でありbytes型ではない
+                    gps_data = {}
+                    for gps_tag, gps_value in value.items(): # GPSはタグ名付きの辞書に変換
+                        gps_tag_name = GPSTAGS.get(gps_tag, gps_tag)
+                        gps_data[gps_tag_name] = gps_value
+                    value = gps_data
+                exif_info[tag_name] = value
+                      
     data = {
         "title": title,
         "caption": caption,
         "filename": image.filename,
         "content_type": image.content_type,
-        "exif": exif_info,  # EXIFデータを返す
+        "exif": exif_info,
     }
-    return data
+    save_to_json(data)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 

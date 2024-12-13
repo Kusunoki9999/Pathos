@@ -1,11 +1,11 @@
 [
     {
         "title": "aaaaa",
-        "caption": "aaaaaaa",
+        "caption": "aaaaaaaaaaa",
         "filename": "test_image.jpg",
         "content_type": "image/jpeg",
         "exif": {
             "GPSInfo": {
-                "1": "N",
-                "2": [
+                "GPSLatitudeRef": "N",
+                "GPSLatitude": [
                     
