@@ -17,6 +17,7 @@ app = FastAPI()
 
 GOOGLE_MAP_API_KEY = os.getenv("GOOGLE_MAP_API_KEY")
 JSON_FILE_PATH = "form_data.json"
+index_path = Path("templates/index.html")
 
 def convert_exif_value(value):
     if isinstance(value, IFDRational):
@@ -43,14 +44,13 @@ def save_to_json(data):
         
 @app.get("/",response_class = HTMLResponse)
 async def root():
-    index_path = Path("templates/index.html")
     return index_path.read_text(encoding = "utf-8")
 
 @app.get("/api-key")
 async def get_api_key():
     return {"api_key":GOOGLE_MAP_API_KEY}
 
-@app.post("/form_data")
+@app.post("/form_data",response_class = HTMLResponse)
 async def get_form_data(
     title: str = Form(None),
     caption: str = Form(None),
@@ -87,6 +87,8 @@ async def get_form_data(
         "gps": gps_data,
     }
     save_to_json(data)
+    return index_path.read_text(encoding = "utf-8")
+
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
