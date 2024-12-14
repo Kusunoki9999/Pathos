@@ -60,7 +60,6 @@ async def get_form_data(
     image_data = await image.read()
     with Image.open(io.BytesIO(image_data)) as img:
         exif_data = img._getexif()
-        exif_info = {}
         
         if exif_data:
             for tag, value in exif_data.items():
@@ -69,23 +68,23 @@ async def get_form_data(
                     gps_data = {}
                     for gps_tag, gps_value in value.items(): # GPSはタグ名付きの辞書に変換
                         gps_tag_name = GPSTAGS.get(gps_tag, gps_tag)
-                        if gps_tag_name in ["GPSLatitude", "GPSLongitude"]:
-                            gps_value = [
+                        if gps_tag_name == "GPSLatitude":
+                            gps_data["GPSLatitude"] = [
                                 float(v) if isinstance(v, IFDRational) else v
                                 for v in gps_value
                             ]
-                        gps_data[gps_tag_name] = gps_value
-                    value = gps_data
-                else:
-                    value = convert_exif_value(value)
-                exif_info[tag_name] = value
+                        elif gps_tag_name == "GPSLongitude":
+                            gps_data["GPSLongitude"] = [
+                                float(v) if isinstance(v, IFDRational) else v
+                                for v in gps_value
+                            ]
                       
     data = {
         "title": title,
         "caption": caption,
         "filename": image.filename,
         "content_type": image.content_type,
-        "exif": exif_info,
+        "gps": gps_data,
     }
     save_to_json(data)
 
