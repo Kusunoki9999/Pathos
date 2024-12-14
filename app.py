@@ -71,7 +71,7 @@ async def get_form_data(
                         gps_tag_name = GPSTAGS.get(gps_tag, gps_tag)
                         if gps_tag_name in ["GPSLatitude", "GPSLongitude"]:
                             gps_value = [
-                                float(v.num) / float(v.den) if isinstance(v, IFDRational) else v
+                                float(v) if isinstance(v, IFDRational) else v
                                 for v in gps_value
                             ]
                         gps_data[gps_tag_name] = gps_value
