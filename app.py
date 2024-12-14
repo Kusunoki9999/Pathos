@@ -89,11 +89,11 @@ async def get_form_data(
     save_to_json(data)
     return index_path.read_text(encoding = "utf-8")
 
-@app.get("/locations")
+@app.get("/user-post-details")
 async def get_locations():
     with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
-        locations = json.load(f)
-    return locations
+        post_details = json.load(f)
+    return post_details
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
