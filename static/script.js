@@ -1,3 +1,10 @@
+function dmsToDecimal(dmsArray) {
+    const degrees = dmsArray[0];
+    const minutes = dmsArray[1];
+    const seconds = dmsArray[2];
+    return degrees + (minutes / 60) + (seconds / 3600);
+}
+
 async function initMap() {
     const contentString = `
     <div>
