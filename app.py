@@ -63,7 +63,7 @@ async def get_form_data(
         
         if exif_data:
             for tag, value in exif_data.items():
-                tag_name = TAGS.get(tag, tag)  # タグ番号を名前に変換
+                tag_name = TAGS.get(tag, tag)  # タグ番号を名前に変換(第二引数はdefaltのReturn値)
                 if tag_name == "GPSInfo": # GPSInfoは辞書型でありbytes型ではない
                     gps_data = {}
                     for gps_tag, gps_value in value.items(): # GPSはタグ名付きの辞書に変換
