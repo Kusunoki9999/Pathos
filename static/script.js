@@ -6,6 +6,10 @@ function dmsToDecimal(dmsArray) {
 }
 
 async function initMap() {
+
+    const response = await fetch('/user-post-details');
+    const postDetails = await response.json();
+    
     const contentString = `
     <div>
         <h1>Sapporo</h1>
