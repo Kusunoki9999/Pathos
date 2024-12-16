@@ -23,15 +23,21 @@ async function initMap() {
         center : {lat: 38.151550, lng: 137.410380},
         zoom: 4,
     });
+
+    postDetail.forEach(post => {
+        const lat = dmsToDecimal(post.gps.GPSLatitude);
+        const lng = dmsToDecimal(post.gps.GPSLongitude);
+
+        const marker = new google.maps.Marker({
+            position: {lat, lng},
+            map,
+            title: post.title
+        });
+    });
     
     const infoWindow = new google.maps.InfoWindow({
         content: contentString,
         ariaLabel: "sapporo",
-    });
-
-    const marker = document.querySelector('gmp-advanced-marker');
-    marker.addEventListener('gmp-click', () => {
-        infoWindow.open({ anchor: marker });
     });
 }
 
