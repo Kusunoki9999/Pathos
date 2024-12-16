@@ -42,7 +42,7 @@ async function loadGoogleMapsAPI() {
         const api_key = data.api_key;
 
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${api_key}&callback=initMap`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${api_key}&callback=initMap&libraries=marker&v=beta&solution_channel=GMP_CCS_infowindows_v2`;
         script.defer = true;
         document.head.appendChild(script);
     } catch (error) {
