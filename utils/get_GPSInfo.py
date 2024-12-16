@@ -10,7 +10,9 @@ def convert_exif_value(value):
         return [convert_exif_value(v) for v in value]
     return value
 
-def extract_gps_from_image(image):
+async def extract_gps_from_image(image):
+    gps_data = {}
+    
     with Image.open(io.BytesIO(image)) as img:
         exif_data = img._getexif()
         
@@ -18,7 +20,6 @@ def extract_gps_from_image(image):
             for tag, value in exif_data.items():
                 tag_name = TAGS.get(tag, tag)  # タグ番号を名前に変換(第二引数はdefaltのReturn値)
                 if tag_name == "GPSInfo": # GPSInfoは辞書型でありbytes型ではない
-                    gps_data = {}
                     for gps_tag, gps_value in value.items(): # GPSはタグ名付きの辞書に変換
                         gps_tag_name = GPSTAGS.get(gps_tag, gps_tag)
                         if gps_tag_name == "GPSLatitude":

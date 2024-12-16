@@ -6,6 +6,7 @@ from fastapi.responses import HTMLResponse
 from utils.save_and_rename_image import save_and_rename_image
 from utils.get_GPSInfo import extract_gps_from_image
 from utils.json_operater import save_to_json
+import io
 import uvicorn
 import os
 import json
@@ -18,7 +19,6 @@ GOOGLE_MAP_API_KEY = os.getenv("GOOGLE_MAP_API_KEY")
 index_path = Path("templates/index.html")
 images_dir = Path("static/images")
 JSON_FILE_PATH = "form_data.json"
-
 
 @app.get("/",response_class = HTMLResponse)
 async def root():
@@ -35,8 +35,10 @@ async def get_form_data(
     image: UploadFile = File(...) #...は必須フィールド
 ):
     
-    image_path = await save_and_rename_image(image)
-    gps_data = extract_gps_from_image(image)
+    image_data = await image.read()
+    
+    image_path = await save_and_rename_image(io.BytesIO(image_data))
+    gps_data = await extract_gps_from_image(image_data)
                       
     data = {
         "title": title,
