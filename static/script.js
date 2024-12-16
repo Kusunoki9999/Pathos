@@ -28,6 +28,10 @@ async function initMap() {
     const infoWindow = new google.maps.InfoWindow({
         content:  `<div><h3>${post.title}</h3><p>${post.caption}</p></div>`,
     });
+
+    merker.addListner("click",() => {
+        infoWindow.open(map, marker);
+    })
 }
 
 async function loadGoogleMapsAPI() {
