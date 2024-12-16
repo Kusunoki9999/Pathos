@@ -14,7 +14,7 @@ async function initMap() {
         zoom: 4,
     });
 
-    postDetail.forEach(post => {
+    postDetails.forEach(post => {
         const lat = dmsToDecimal(post.gps.GPSLatitude);
         const lng = dmsToDecimal(post.gps.GPSLongitude);
 
@@ -23,15 +23,15 @@ async function initMap() {
             map,
             title: post.title
         });
-    });
-    
-    const infoWindow = new google.maps.InfoWindow({
-        content:  `<div><h3>${post.title}</h3><p>${post.caption}</p></div>`,
-    });
 
-    merker.addListner("click",() => {
-        infoWindow.open(map, marker);
-    })
+        const infoWindow = new google.maps.InfoWindow({
+            content:  `<div><h3>${post.title}</h3><p>${post.caption}</p></div>`,
+        });
+
+        marker.addListner("click",() => {
+            infoWindow.open(map, marker);
+        })
+    });
 }
 
 async function loadGoogleMapsAPI() {
