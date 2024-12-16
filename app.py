@@ -10,6 +10,7 @@ import uvicorn
 import os
 import json
 import io
+import uuid
 
 load_dotenv()
 
@@ -18,6 +19,7 @@ app = FastAPI()
 GOOGLE_MAP_API_KEY = os.getenv("GOOGLE_MAP_API_KEY")
 JSON_FILE_PATH = "form_data.json"
 index_path = Path("templates/index.html")
+images_dir = Path("static/images")
 
 def convert_exif_value(value):
     if isinstance(value, IFDRational):
@@ -56,6 +58,12 @@ async def get_form_data(
     caption: str = Form(None),
     image: UploadFile = File(...) #...は必須フィールド
 ):
+
+    unique_image_filename = f"{uuid.uuid4().hex}.jpg"
+    image_path = images_dir / unique_image_filename
+
+    with open(image_path, "wb") as f:
+        f.write(await image.read())
     
     image_data = await image.read()
     with Image.open(io.BytesIO(image_data)) as img:
