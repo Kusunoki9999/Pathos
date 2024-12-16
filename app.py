@@ -91,7 +91,7 @@ async def get_form_data(
         "title": title,
         "caption": caption,
         "filename": image.filename,
-        "content_type": image.content_type,
+        "image_path": f"/static/images/{unique_image_filename}",
         "gps": gps_data,
     }
     save_to_json(data)
