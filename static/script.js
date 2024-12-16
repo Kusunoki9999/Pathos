@@ -18,6 +18,11 @@ async function initMap() {
         </div>`;
     const response = await fetch('/user-post-details');
     const postDetails = await response.json();
+
+    const map = new google.map.Map(document.getElementById("map-container"),{
+        center : {lat: 38.151550, lng: 137.410380},
+        zoom: 4,
+    });
     
     const infoWindow = new google.maps.InfoWindow({
         content: contentString,
