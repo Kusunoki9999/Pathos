@@ -25,7 +25,11 @@ async function initMap() {
         });
 
         const infoWindow = new google.maps.InfoWindow({
-            content:  `<div><h3>${post.title}</h3><p>${post.caption}</p></div>`,
+            content:  `<div>
+                            <h3>${post.title}</h3>
+                            <p>${post.caption}</p>
+                            <img src="${post.image_path} atyle="max-width: 200px; height: auto;">
+                        </div>`,
         });
 
         marker.addListener("click",() => {

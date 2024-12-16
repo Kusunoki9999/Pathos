@@ -37,7 +37,7 @@ async def get_form_data(
     
     image_data = await image.read()
     
-    image_path = await save_and_rename_image(io.BytesIO(image_data))
+    image_path = await save_and_rename_image(image_data)
     gps_data = await extract_gps_from_image(image_data)
                       
     data = {
