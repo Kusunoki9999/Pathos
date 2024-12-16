@@ -35,7 +35,7 @@ async def get_form_data(
     image: UploadFile = File(...) #...は必須フィールド
 ):
     
-    image_path = save_and_rename_image(image)
+    image_path = await save_and_rename_image(image)
     gps_data = extract_gps_from_image(image)
                       
     data = {
