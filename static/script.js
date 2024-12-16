@@ -9,7 +9,7 @@ async function initMap() {
     const response = await fetch('/user-post-details');
     const postDetails = await response.json();
 
-    const map = new google.map.Map(document.getElementById("map-container"),{
+    const map = new google.maps.Map(document.getElementById("map-container"),{
         center : {lat: 38.151550, lng: 137.410380},
         zoom: 4,
     });
@@ -28,7 +28,7 @@ async function initMap() {
             content:  `<div><h3>${post.title}</h3><p>${post.caption}</p></div>`,
         });
 
-        marker.addListner("click",() => {
+        marker.addListener("click",() => {
             infoWindow.open(map, marker);
         })
     });
@@ -42,7 +42,7 @@ async function loadGoogleMapsAPI() {
         const api_key = data.api_key;
 
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${api_key}&callback=initMap&libraries=marker&v=beta&solution_channel=GMP_CCS_infowindows_v2`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${api_key}&callback=initMap`;
         script.defer = true;
         document.head.appendChild(script);
     } catch (error) {
