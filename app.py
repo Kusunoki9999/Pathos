@@ -5,35 +5,21 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from utils.save_and_rename_image import save_and_rename_image
 from utils.get_GPSInfo import extract_gps_from_image
+from utils.json_operater import save_to_json
 import uvicorn
 import os
 import json
 
-load_dotenv()
 
+load_dotenv()
 app = FastAPI()
 
 GOOGLE_MAP_API_KEY = os.getenv("GOOGLE_MAP_API_KEY")
-JSON_FILE_PATH = "form_data.json"
 index_path = Path("templates/index.html")
 images_dir = Path("static/images")
+JSON_FILE_PATH = "form_data.json"
 
-def save_to_json(data):
-    try:
-        if Path(JSON_FILE_PATH).exists():
-            with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
-                existing_data = json.load(f)
-        else:
-            existing_data = []
 
-        existing_data.append(data)
-
-        with open(JSON_FILE_PATH, "w", encoding="utf-8") as f:
-            json.dump(existing_data, f, ensure_ascii=False, indent=4)
-    except Exception as e:
-        print(f"Error saving data to JSON: {e}")
-
-        
 @app.get("/",response_class = HTMLResponse)
 async def root():
     return index_path.read_text(encoding = "utf-8")
@@ -59,6 +45,7 @@ async def get_form_data(
         "image_path": image_path,
         "gps": gps_data,
     }
+    
     save_to_json(data)
     return index_path.read_text(encoding = "utf-8")
 
