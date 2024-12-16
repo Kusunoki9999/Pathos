@@ -6,16 +6,6 @@ function dmsToDecimal(dmsArray) {
 }
 
 async function initMap() {
-    const contentString = `
-        <div>
-            <h1>Sapporo</h1>
-            <div>
-                <p>
-                    Sapporo center park
-                </p>
-                <img src="https://www.visit-hokkaido.jp/lsc/upfile/spot/0001/0004/10004_1_l.jpg" width="300" height="200">
-            </div>
-        </div>`;
     const response = await fetch('/user-post-details');
     const postDetails = await response.json();
 
@@ -36,8 +26,7 @@ async function initMap() {
     });
     
     const infoWindow = new google.maps.InfoWindow({
-        content: contentString,
-        ariaLabel: "sapporo",
+        content:  `<div><h3>${post.title}</h3><p>${post.caption}</p></div>`,
     });
 }
 
