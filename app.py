@@ -3,14 +3,11 @@ from dotenv import load_dotenv
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
-from PIL import Image
-from PIL.ExifTags import TAGS, GPSTAGS
-from PIL.TiffImagePlugin import IFDRational
 from utils.save_and_rename_image import save_and_rename_image
+from utils.get_GPSInfo import extract_gps_from_image
 import uvicorn
 import os
 import json
-import io
 
 load_dotenv()
 
@@ -20,13 +17,6 @@ GOOGLE_MAP_API_KEY = os.getenv("GOOGLE_MAP_API_KEY")
 JSON_FILE_PATH = "form_data.json"
 index_path = Path("templates/index.html")
 images_dir = Path("static/images")
-
-def convert_exif_value(value):
-    if isinstance(value, IFDRational):
-        return float(value)
-    elif isinstance(value, (list, tuple)):
-        return [convert_exif_value(v) for v in value]
-    return value
 
 def save_to_json(data):
     try:
@@ -60,27 +50,7 @@ async def get_form_data(
 ):
     
     image_path = save_and_rename_image(image)
-    
-    with Image.open(io.BytesIO(image)) as img:
-        exif_data = img._getexif()
-        
-        if exif_data:
-            for tag, value in exif_data.items():
-                tag_name = TAGS.get(tag, tag)  # タグ番号を名前に変換(第二引数はdefaltのReturn値)
-                if tag_name == "GPSInfo": # GPSInfoは辞書型でありbytes型ではない
-                    gps_data = {}
-                    for gps_tag, gps_value in value.items(): # GPSはタグ名付きの辞書に変換
-                        gps_tag_name = GPSTAGS.get(gps_tag, gps_tag)
-                        if gps_tag_name == "GPSLatitude":
-                            gps_data["GPSLatitude"] = [
-                                float(v) if isinstance(v, IFDRational) else v
-                                for v in gps_value
-                            ]
-                        elif gps_tag_name == "GPSLongitude":
-                            gps_data["GPSLongitude"] = [
-                                float(v) if isinstance(v, IFDRational) else v
-                                for v in gps_value
-                            ]
+    gps_data = extract_gps_from_image(image)
                       
     data = {
         "title": title,
