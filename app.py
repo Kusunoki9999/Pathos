@@ -6,11 +6,11 @@ from fastapi.responses import HTMLResponse
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 from PIL.TiffImagePlugin import IFDRational
+from utils.save_and_rename_image import save_and_rename_image
 import uvicorn
 import os
 import json
 import io
-import uuid
 
 load_dotenv()
 
@@ -58,15 +58,10 @@ async def get_form_data(
     caption: str = Form(None),
     image: UploadFile = File(...) #...は必須フィールド
 ):
-
-    unique_image_filename = f"{uuid.uuid4().hex}.jpg"
-    image_path = images_dir / unique_image_filename
-
-    with open(image_path, "wb") as f:
-        f.write(await image.read())
     
-    image_data = await image.read()
-    with Image.open(io.BytesIO(image_data)) as img:
+    image_path = save_and_rename_image(image)
+    
+    with Image.open(io.BytesIO(image)) as img:
         exif_data = img._getexif()
         
         if exif_data:
@@ -91,7 +86,7 @@ async def get_form_data(
         "title": title,
         "caption": caption,
         "filename": image.filename,
-        "image_path": f"/static/images/{unique_image_filename}",
+        "image_path": image_path,
         "gps": gps_data,
     }
     save_to_json(data)
