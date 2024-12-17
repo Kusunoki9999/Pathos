@@ -11,4 +11,4 @@ async def save_and_rename_image(image):
     async with aiofiles.open(image_path, "wb") as f:
         await f.write(image)
 
-    return str(image_path)
+    return f"/static/images/{unique_image_filename}"

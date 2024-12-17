@@ -28,7 +28,7 @@ async function initMap() {
             content:  `<div>
                             <h3>${post.title}</h3>
                             <p>${post.caption}</p>
-                            <img src="${post.image_path} atyle="max-width: 200px; height: auto;">
+                            <img src="${post.image_path}" style="max-width: 200px; height: auto;">
                         </div>`,
         });
 
