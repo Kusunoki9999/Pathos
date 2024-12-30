@@ -5,6 +5,15 @@ function dmsToDecimal(dmsArray) {
     return degrees + (minutes / 60) + (seconds / 3600);
 }
 
+function toggleForm() {
+    const formContainer = document.getElementById("form-container");
+    if (formContainer.style.display === "none" || formContainer.style.display === "") {
+        formContainer.style.display = "block";
+    } else {
+        formContainer.style.display = "none";
+    }
+}
+
 async function initMap() {
     const response = await fetch('/user-post-details');
     const postDetails = await response.json();
