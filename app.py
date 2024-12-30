@@ -27,7 +27,7 @@ async def root():
 @app.get("/api-key")
 async def get_api_key():
     return {"api_key":GOOGLE_MAP_API_KEY}
-
+  
 @app.post("/form_data",response_class = HTMLResponse)
 async def get_form_data(
     title: str = Form(None),
