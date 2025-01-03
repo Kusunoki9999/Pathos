@@ -2,11 +2,11 @@ from fastapi import FastAPI, Request, Form, UploadFile, File
 from dotenv import load_dotenv
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from utils.save_and_rename_image import save_and_rename_image
 from utils.get_GPSInfo import extract_gps_from_image
 from utils.json_operater import save_to_json
-import io
+import base64
 import uvicorn
 import os
 import json
@@ -28,10 +28,10 @@ async def root():
 async def get_api_key():
     return {"api_key":GOOGLE_MAP_API_KEY}
   
-@app.post("/api/submit",response_class = HTMLResponse)
+@app.post("/form_data",response_class = HTMLResponse)
 async def get_form_data(
-    title: str = Form(None),
-    caption: str = Form(None),
+    title: str = Request,
+    caption: str = Request,
     image: UploadFile = File(...) #...は必須フィールド
 ):
     
@@ -50,6 +50,40 @@ async def get_form_data(
     
     save_to_json(data)
     return index_path.read_text(encoding = "utf-8")
+
+@app.post("/api/json-submit")
+async def json_submit(request: Request):
+    try:
+        # リクエストデータを JSON としてパース
+        body = await request.json()
+        print(body)
+
+        image_data = body.get("image")
+        title = body.get("title", "")
+        caption = body.get("caption", "")
+
+        
+        # 必須フィールドの存在を確認
+        #if not image_data:
+        #    return JSONResponse(content={"message": "画像データが含まれていません"}, status_code=400)
+
+        # 画像データをデコード
+        image_bytes = base64.b64decode(image_data)
+
+        image_path = await save_and_rename_image(image_bytes)
+        gps_data = await extract_gps_from_image(image_bytes)
+
+        data = {
+            "title": title,
+            "caption": caption,
+            "image_path": image_path,
+            "gps": gps_data,
+        }
+        save_to_json(data)
+        return JSONResponse(content={"message": "成功", "data": data})
+    
+    except Exception as e:
+        return JSONResponse(content={"message": "エラーが発生しました", "error": str(e)}, status_code=500)
 
 @app.get("/user-post-details")
 async def get_locations():
