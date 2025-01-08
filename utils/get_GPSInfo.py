@@ -1,7 +1,6 @@
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 from PIL.TiffImagePlugin import IFDRational
-import base64
 import io
 
 def convert_exif_value(value):
