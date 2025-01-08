@@ -15,6 +15,11 @@ async function initMap() {
     });
 
     postDetails.forEach(post => {
+        if (!post.gps || !post.gps.GPSLatitude || !post.gps.GPSLongitude) {
+            console.error("GPS data is missing for post:", post);
+            return; // データがない場合スキップ
+        }
+        
         const lat = dmsToDecimal(post.gps.GPSLatitude);
         const lng = dmsToDecimal(post.gps.GPSLongitude);
 

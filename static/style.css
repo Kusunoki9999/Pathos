@@ -1,4 +1,4 @@
-/* サイドバー */
+/*
 #sidebar {
     position: fixed;
     top: 0;
@@ -11,15 +11,55 @@
     overflow-y: auto;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   }
+*/
   
-  /* mapコンテナ */
-  #map-container {
-    margin-left: 320px;
-    height: 100vh;
-  }
+/* ヘッダー全体 */
+#app-header {
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+/* ナビゲーションリンク */
+#nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+#nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1em;
+  transition: color 0.3s;
+}
+
+#nav-links a:hover {
+  color: #007BFF;
+}
+
+/* コンテンツエリア */
+#content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin-top: 60px; /* ヘッダーの高さを考慮 */
+}
+
+/* マップのスタイル */
+#map-container {
+  width: 80%;
+  height: 80%;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
   
-  img {
-    max-width: 100%;
-    height: auto;
-    margin-top: 10px; 
-  }
+img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px; 
+}

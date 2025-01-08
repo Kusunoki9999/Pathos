@@ -1,6 +1,7 @@
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 from PIL.TiffImagePlugin import IFDRational
+import base64
 import io
 
 def convert_exif_value(value):
@@ -15,6 +16,7 @@ async def extract_gps_from_image(image):
     
     with Image.open(io.BytesIO(image)) as img:
         exif_data = img._getexif()
+        print(exif_data)
         
         if exif_data:
             for tag, value in exif_data.items():

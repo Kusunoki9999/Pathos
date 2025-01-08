@@ -10,6 +10,7 @@ import base64
 import uvicorn
 import os
 import json
+import asyncio
 
 
 load_dotenv()
@@ -30,16 +31,16 @@ async def get_api_key():
   
 @app.post("/form_data",response_class = HTMLResponse)
 async def get_form_data(
-    title: str = Request,
-    caption: str = Request,
+    title: str = Form(None),
+    caption: str = Form(None),
     image: UploadFile = File(...) #...は必須フィールド
 ):
-    
+
     image_data = await image.read()
-    
+
     image_path = await save_and_rename_image(image_data)
     gps_data = await extract_gps_from_image(image_data)
-                      
+
     data = {
         "title": title,
         "caption": caption,
@@ -47,7 +48,7 @@ async def get_form_data(
         "image_path": image_path,
         "gps": gps_data,
     }
-    
+
     save_to_json(data)
     return index_path.read_text(encoding = "utf-8")
 
@@ -55,9 +56,8 @@ async def get_form_data(
 async def json_submit(request: Request):
     try:
         # リクエストデータを JSON としてパース
-        body = await request.json()
-        print(body)
-
+        body = await asyncio.wait_for(request.json(), timeout=60)
+            
         image_data = body.get("image")
         title = body.get("title", "")
         caption = body.get("caption", "")
@@ -67,7 +67,10 @@ async def json_submit(request: Request):
         #if not image_data:
         #    return JSONResponse(content={"message": "画像データが含まれていません"}, status_code=400)
 
-        # 画像データをデコード
+        # imageの値の不要な部分を削除
+        if image_data.startswith("data:image"):
+            image_data = image_data.split(",")[1] 
+            
         image_bytes = base64.b64decode(image_data)
 
         image_path = await save_and_rename_image(image_bytes)
@@ -80,7 +83,7 @@ async def json_submit(request: Request):
             "gps": gps_data,
         }
         save_to_json(data)
-        return JSONResponse(content={"message": "成功", "data": data})
+        return JSONResponse(content={"message": "投稿が完了しました。", "data": data})
     
     except Exception as e:
         return JSONResponse(content={"message": "エラーが発生しました", "error": str(e)}, status_code=500)
