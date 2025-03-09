@@ -15,6 +15,8 @@ async def extract_gps_from_image(image):
     
     with Image.open(io.BytesIO(image)) as img:
         exif_data = img._getexif()
+        if exif_data is None and "exif" in img.info:
+            exif_data = Image.open(io.BytesIO(img.info["exif"]))._getexif()
         print(exif_data)
         
         if exif_data:

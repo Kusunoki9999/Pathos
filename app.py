@@ -37,6 +37,7 @@ async def get_form_data(
 ):
 
     image_data = await image.read()
+    print(image_data)
 
     image_path = await save_and_rename_image(image_data)
     gps_data = await extract_gps_from_image(image_data)
@@ -57,11 +58,11 @@ async def json_submit(request: Request):
     try:
         # リクエストデータを JSON としてパース
         body = await asyncio.wait_for(request.json(), timeout=60)
-            
+
+        print(f"ここボディ！！！{body}")
         image_data = body.get("image")
         title = body.get("title", "")
         caption = body.get("caption", "")
-
         
         # 必須フィールドの存在を確認
         #if not image_data:
@@ -70,8 +71,10 @@ async def json_submit(request: Request):
         # imageの値の不要な部分を削除
         if image_data.startswith("data:image"):
             image_data = image_data.split(",")[1] 
-            
+
+
         image_bytes = base64.b64decode(image_data)
+        print(image_bytes)
 
         image_path = await save_and_rename_image(image_bytes)
         gps_data = await extract_gps_from_image(image_bytes)
