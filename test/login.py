@@ -39,6 +39,14 @@ async def get_current_active_user(
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
+@app.post("/token")
+async def login(form_data: Annotated[OAuth2PasswordRequestForm,Depends()]):
+    user_dict = form_data.username
+    user = UserInDB(**user_dict)
+
+    return {"access_token":user.username, "token_type":"bearer"}
+
+
 @app.get("/users/me")
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
