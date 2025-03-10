@@ -14,6 +14,15 @@ class User(BaseModel):
     full_name: str | None = None
     disabled: bool | None = None
 
+class UserInDB(User):
+    hashed_password: str
+
+
+def get_user(db, username: str):
+    if username in db:
+        user_dict = db[username]
+        return UserInDB(**user_dict)
+
 def fake_decode_token(token):
     return User(
         username=token + "fakedecoded", email="Kusunoki9999@example.com", full_name="Kusunoki Taro"
