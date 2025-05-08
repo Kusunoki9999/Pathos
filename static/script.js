@@ -59,5 +59,54 @@ async function loadGoogleMapsAPI() {
     }
 }
 
-// 読み込み時にAPIロード
-window.onload = loadGoogleMapsAPI;
+async function fetchCurrentUser() {
+    console.log("✅ fetchCurrentUser() が呼ばれました");
+
+    const token = localStorage.getItem("access_token");
+    console.log("🔑 取得したトークン:", token);
+
+    if (!token) {
+        console.log("🚫 トークンが見つかりません。未ログインと判定します。");
+        document.getElementById("current-user").innerText = "未ログイン";
+        return;
+    }
+
+    try {
+        const res = await fetch("/auth/users/me", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        console.log("📡 サーバーからのレスポンス:", res.status);
+
+        if (res.ok) {
+            const user = await res.json();
+            console.log("👤 取得したユーザー情報:", user);
+            document.getElementById("current-user").innerText = user.username;
+        } else {
+            console.warn("ユーザー情報の取得に失敗しました:", await res.text());
+            document.getElementById("current-user").innerText = "未ログイン";
+        }
+    } catch (error) {
+        console.error("fetchCurrentUser中の例外:", error);
+        document.getElementById("current-user").innerText = "未ログイン";
+    }
+}
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+    console.log("DOMContentLoaded 発火");
+    await loadGoogleMapsAPI();
+    await fetchCurrentUser();
+});
+
+
+/*
+正しく動作していないためDOMContentLoadイベントに修正
+window.onload = async () => {
+    await loadGoogleMapsAPI();
+    await fetchCurrentUser(); // 追加
+};
+*/

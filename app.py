@@ -6,6 +6,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from utils.save_and_rename_image import save_and_rename_image
 from utils.get_GPSInfo import extract_gps_from_image
 from utils.json_operater import save_to_json
+from auth import router as auth_router
 import base64
 import uvicorn
 import os
@@ -15,6 +16,7 @@ import asyncio
 
 load_dotenv()
 app = FastAPI()
+app.include_router(auth_router, prefix="/auth")
 
 GOOGLE_MAP_API_KEY = os.getenv("GOOGLE_MAP_API_KEY")
 index_path = Path("templates/index.html")
@@ -96,6 +98,12 @@ async def get_locations():
     with open(JSON_FILE_PATH, "r", encoding="utf-8") as f:
         post_details = json.load(f)
     return post_details
+
+@app.get("/login", response_class=HTMLResponse)
+async def login_page():
+    login_path = Path("templates/login.html")
+    return login_path.read_text(encoding="utf-8")
+
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
